@@ -45,6 +45,12 @@ $csvFilePath = "C:\path\to\your\users.csv"
 # Import the CSV file
 $users = Import-Csv -Path $csvFilePath
 
+# Get your username
+$admin = "admin#example.com"
+
+# Sign script progess
+Write-Host "Script is in-progress..."
+
 # Loop through each pair of CurrentUserID and DelegateUserID in the CSV file
 foreach ($user in $users) {
     $currentUserID = $user.CurrentUserID
@@ -53,14 +59,32 @@ foreach ($user in $users) {
     # Construct the URL to the user's OneDrive site
     $oneDriveUrl = "https://<Your-Tenant>-my.sharepoint.com/personal/$($currentUserID -replace '@','_')"
 
-    # Display the current processing information
-    Write-Host "Adding delegate: $delegateUserID to OneDrive of: $currentUserID"
+    # Show which user processing
+    Get-Log -LogFilePath $logFilePath -LogMessage "Processing OneDrive for: $currentUserID"
 
-    # Grant permission to the delegate user
-    Set-SPOUser -Site $oneDriveUrl -LoginName $delegateUserID -IsSiteCollectionAdmin $true
+    try {
+        # Add yourself to the SharePoint as admin before you can add others
+        Set-SPOUser -Site $oneDriveUrl -LoginName $admin -IsSiteCollectionAdmin $true -ErrorAction Stop
+        Get-Log -LogFilePath $logFilePath -LogMessage "Successfully added yourself as an admin to $currentUserID OneDrive"
+    } catch {
+        # Handle the error if adding yourself as admin fails
+        Get-Log -LogFilePath $logFilePath -LogMessage "Failed to added yourself as an admin to $currentUserID OneDrive. Error details: $_"
+        Write-Host "Failed to add, check log file"
+        exit  # Exit the script because further operations depend on this action
+    }
+
+    try {
+        # Grant permission to the delegate user
+        Set-SPOUser -Site $oneDriveUrl -LoginName $delegateUserID -IsSiteCollectionAdmin $true -ErrorAction Stop
+        Get-Log -LogFilePath $logFilePath -LogMessage "Successfully added yourself as an admin to $currentUserID OneDrive"
+    } catch {
+        # Handle the error if granting permission to the delegate user fails
+        Get-Log -LogFilePath $logFilePath -LogMessage "Failed to add delegate: $delegateUserID to $currentUserID Onedrive. Error details: $_"
+        Write-Host "Failed, check log file"
+    }
 }
 
 # Disconnect from SharePoint Online
 Disconnect-SPOService
 
-Write-Host "Delegates have been added to OneDrive successfully."
+Write-Host "Script execution completed."
