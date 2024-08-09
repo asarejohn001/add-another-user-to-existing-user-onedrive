@@ -16,4 +16,5 @@ The [add-another-user-to-onedrive.ps1](./add-another-user-to-onedrive.ps1) will
 4. Set variable for log file, CSV file, and for the admin user.
 > [!IMPORTANT]
 > Modify the variables to match yours
-5. 
+5. Add yourself or SharePoint Admin as [Collection Admin](https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spouser?view=sharepoint-ps#parameters).
+6. Grants the DelegateUserID user the IsSiteCollectionAdmin permission on the CurrentUserID user's OneDrive site. check the [CSV file](./users.csv).
