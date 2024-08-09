@@ -24,16 +24,15 @@ function Get-Log {
     Add-Content -Path $LogFilePath -Value $logEntry
 }
 
-# Connect to EXO
+# Connect to SharePoint Online
 try {
-    # Connect to SharePoint Online
     Connect-SPOService -Url https://<Your-Tenant>-admin.sharepoint.com -ShowProgress $true -ErrorAction Stop
-    Get-Log -LogFilePath $logFilePath -LogMessage "Successfully connected to Exchange Online."
+    Get-Log -LogFilePath $logFilePath -LogMessage "Successfully connected to SharePoint Online."
     
 } catch {
     # Handle the error if connection fails
-    Get-Log -LogFilePath $logFilePath -LogMessage "Failed to connect to Exchange Online. Exiting script. Error details: $_"
-    Write-Host "Couldn't connect to EXO. Check log file"
+    Get-Log -LogFilePath $logFilePath -LogMessage "Failed to connect to SharePoint Online. Exiting script. Error details: $_"
+    Write-Host "Couldn't connect to SharePoint Online. Check log file"
     exit
 }
 
