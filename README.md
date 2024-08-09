@@ -13,7 +13,7 @@ The [add-another-user-to-onedrive.ps1](./add-another-user-to-onedrive.ps1) will
 3. Connect to SharePoint Online.
 > [!IMPORTANT]
 > Change the SharePoint URL variable to your tenant's URL
-4. Set variable for log file, CSV file, and for the admin user.
+4. Set variables for the log, CSV, and admin user files.
 > [!IMPORTANT]
 > Modify the variables to match yours
 5. Add yourself or SharePoint Admin as [Collection Admin](https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spouser?view=sharepoint-ps#parameters).
